@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundColor"
+    tools:context="jaygoo.recordwaveview.MainActivity"
+    android:orientation="vertical">
+
+    <TextView
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        android:text="录音波浪动画"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <jaygoo.widget.rwv.RecordWaveView
+        android:id="@+id/recordWaveView"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+    <TextView
+        android:id="@+id/start"
+        android:textSize="22sp"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        android:text="点击录音，再次点击停止录音"
+        android:textColor="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <jaygoo.widget.rwv.Mp3WaveRecorder
+        android:id="@+id/mp3WaveRecorder"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+</LinearLayout>

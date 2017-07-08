@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RecordWaveView">
+        <attr name="backgroundColor" format="color"/>
+        <attr name="firstPathColor" format="color"/>
+        <attr name="centerPathColor" format="color"/>
+        <attr name="secondPathColor" format="color"/>
+        <attr name="moveSpeed" format="float"/>
+        <attr name="ballSpeed" format="float"/>
+        <attr name="simplingSize" format="integer"/>
+        <attr name="amplitude" format="dimension"/>
+        <attr name="showBalls" format="boolean"/>
+    </declare-styleable>
+</resources>
