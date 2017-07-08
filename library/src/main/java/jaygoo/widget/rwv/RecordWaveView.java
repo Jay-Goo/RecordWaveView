@@ -16,6 +16,7 @@ import android.media.MediaRecorder;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseArray;
 
 import java.util.Random;
 
@@ -93,6 +94,8 @@ public class RecordWaveView extends RenderView {
     private int secondPathColor;
     //是否显示小球
     private boolean isShowBalls;
+    //存储衰减系数
+    private SparseArray<Double> recessionFuncs = new SparseArray<>();
 
     public RecordWaveView(Context context) {
         this(context,null);
@@ -295,18 +298,26 @@ public class RecordWaveView extends RenderView {
             mapX[i] = (x / (float)width) * 4 - 2;
         }
     }
+
+
     /**
      * 计算波形函数中x对应的y值
-     *
+     * 使用稀疏矩阵进行暂存计算好的衰减系数值，下次使用时直接查找，减少计算量
      * @param mapX   换算到[-2,2]之间的x值
      * @param offset 偏移量
      * @return
      */
     private double calcValue(float mapX, float offset) {
+        int keyX = (int) (mapX*1000);
         offset %= 2;
         double sinFunc = Math.sin(0.75 * Math.PI * mapX - offset * Math.PI);
-        //曲线衰减系数
-        double recessionFunc = Math.pow(4 / (4 + Math.pow(mapX, 4)), 2.5);
+        double recessionFunc;
+        if(recessionFuncs.indexOfKey(keyX) >=0 ){
+            recessionFunc = recessionFuncs.get(keyX);
+        }else {
+            recessionFunc = Math.pow(4 / (4 + Math.pow(mapX, 4)), 2.5);
+            recessionFuncs.put(keyX,recessionFunc);
+        }
         return sinFunc * recessionFunc;
     }
 
@@ -342,10 +353,16 @@ public class RecordWaveView extends RenderView {
         y = centerHeight + 10 * (float) Math.sin(speed);
         canvas.drawCircle(x,y,DEFAULT_CIRCLE_RADIUS * 0.5f,paint);
 
+        paint.setColor(firstPathColor);
+        x = 5.2f * width / 6f + 30 * (float)(Math.sin(0.21 * speed + CIRCLE_SPEED * Math.PI));
+        y = centerHeight + 10 * (float) Math.cos(speed);
+        canvas.drawCircle(x,y,DEFAULT_CIRCLE_RADIUS * 0.75f,paint);
+
         paint.setColor(secondPathColor);
         x = 5.5f * width / 6f + 60 * (float)(Math.sin(0.15 * speed - CIRCLE_SPEED * Math.PI));
         y = centerHeight + 50 * (float) Math.sin(speed);
         canvas.drawCircle(x,y,DEFAULT_CIRCLE_RADIUS * 0.7f,paint);
+
     }
 
     private int dip2px(float dpValue) {
