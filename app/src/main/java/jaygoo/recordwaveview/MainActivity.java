@@ -2,6 +2,7 @@ package jaygoo.recordwaveview;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.File;
@@ -20,7 +21,12 @@ public class MainActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_main);
         recordWaveView = (RecordWaveView) findViewById(R.id.recordWaveView);
         mp3WaveRecorder = (Mp3WaveRecorder) findViewById(R.id.mp3WaveRecorder);
-
+        recordWaveView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recordWaveView.stopAnim();
+            }
+        });
         mp3WaveRecorder.setOnRecordListener(new Mp3WaveRecorder.OnRecordListener() {
             @Override
             public void onStart() {
@@ -36,10 +42,19 @@ public class MainActivity extends AppCompatActivity  {
         });
     }
 
+
     @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        recordWaveView.start();
+    protected void onResume() {
+        super.onResume();
+        recordWaveView.onResume(true);
+        mp3WaveRecorder.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        recordWaveView.onPause();
+        mp3WaveRecorder.onPause();
     }
 
     @Override

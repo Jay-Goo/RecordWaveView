@@ -24,6 +24,8 @@ public class Mp3WaveRecorder extends RecordWaveView implements View.OnClickListe
     private OnRecordListener mOnRecordListener;
     private MP3Recorder mMP3Recorder;
     private String filePath;
+    //每10次绘制时间(16ms) 更新振幅
+    private int cycleTimes = 0;
 
     public Mp3WaveRecorder(Context context) {
         this(context, null);
@@ -44,17 +46,24 @@ public class Mp3WaveRecorder extends RecordWaveView implements View.OnClickListe
         mMP3Recorder = new MP3Recorder(new File(filePath));
     }
 
-    int i = 0;
+
     //每16ms调用一次
     @Override
     protected void refreshAmplitude() {
         super.refreshAmplitude();
-        i++;
-        if (i %10 == 0) {
-            i = 0;
+        cycleTimes++;
+        if (cycleTimes % 10 == 0) {
+            cycleTimes = 0;
             setVolume(getVolumeDb());
         }
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        if (hasFocus && isRecording()) {
+           startAnim();
+        }
     }
 
     public int getVolume(){
@@ -81,13 +90,13 @@ public class Mp3WaveRecorder extends RecordWaveView implements View.OnClickListe
         }
     }
 
-    @Override
     public void start() {
-        super.start();
-        if (mOnRecordListener != null){
-            mOnRecordListener.onStart();
-        }
-        if (mMP3Recorder != null){
+        startAnim();
+
+        if (mMP3Recorder != null && !mMP3Recorder.isRecording()){
+            if (mOnRecordListener != null){
+                mOnRecordListener.onStart();
+            }
             try {
                 mMP3Recorder.start();
             } catch (IOException e) {
@@ -96,21 +105,29 @@ public class Mp3WaveRecorder extends RecordWaveView implements View.OnClickListe
         }
     }
 
-    @Override
     public void stop() {
-        super.stop();
-        if (mMP3Recorder != null){
+        stopAnim();
+        if (mMP3Recorder != null && mMP3Recorder.isRecording()){
             mMP3Recorder.stop();
+            if (mOnRecordListener != null){
+                mOnRecordListener.onStop(new File(filePath));
+            }
         }
-        if (mOnRecordListener != null){
-            mOnRecordListener.onStop(new File(filePath));
-        }
+
     }
 
     public void clearCache(){
         File file = new File(filePath);
         if (file.exists()){
             file.delete();
+        }
+    }
+
+    public boolean isRecording() {
+        if (mMP3Recorder != null) {
+            return mMP3Recorder.isRecording();
+        }else {
+            return false;
         }
     }
 
