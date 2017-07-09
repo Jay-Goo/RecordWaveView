@@ -4,6 +4,7 @@
 
 ----------
 
+# 效果图（实际效果更好）
 
 ![image](https://github.com/Jay-Goo/RecordWaveView/blob/master/gif/2017-07-09%2023_10_44.gif)
 
