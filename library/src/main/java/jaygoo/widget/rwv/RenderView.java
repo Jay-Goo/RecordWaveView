@@ -114,8 +114,8 @@ public abstract class RenderView extends SurfaceView implements SurfaceHolder.Ca
      */
     public void onResume(boolean isAutoStartAnim){
         synchronized (surfaceLock){
+            this.isAutoStartAnim = isAutoStartAnim;
             if (renderThread != null) {
-                this.isAutoStartAnim = isAutoStartAnim;
                 renderThread.isPause = false;
                 surfaceLock.notifyAll();
             }

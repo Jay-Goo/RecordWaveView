@@ -80,6 +80,10 @@ public class Mp3WaveRecorder extends RecordWaveView implements View.OnClickListe
         return 0;
     }
 
+    public MP3Recorder getMP3Recorder(){
+        return mMP3Recorder;
+    }
+
 
     @Override
     public void onClick(View v) {
